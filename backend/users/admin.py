@@ -8,15 +8,12 @@ from .models import CustomUser
 class UserAdmin(UserAdmin):
     list_display = (
         'email',
-        'username',
         'first_name',
         'last_name',
     )
     list_filter = (
         'email',
-        'username',
     )
     search_fields = (
         'email',
-        'username',
     )
