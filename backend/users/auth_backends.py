@@ -11,7 +11,7 @@ class EmailOrUsernameModelBackend(ModelBackend):
 
         try:
             user = UserModel.objects.get(
-              Q(username=username) | Q(email=username)
+                Q(username=username) | Q(email=username)
             )
 
         except UserModel.DoesNotExist:
