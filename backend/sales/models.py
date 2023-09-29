@@ -106,13 +106,13 @@ class Forecast(models.Model):
     store_id = models.ForeignKey(
         Shop,
         on_delete=models.CASCADE,
-        related_name='sales_store',
+        related_name='store_forecast',
         verbose_name='магазин',
     )
     sku_id = models.ForeignKey(
         SKU,
         on_delete=models.CASCADE,
-        related_name='sales_sku',
+        related_name='sku_forecast',
         verbose_name='товар',
     )
     forecast_date = models.DateField()
