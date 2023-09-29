@@ -120,7 +120,8 @@ class Forecast(models.Model):
         Sales,
         on_delete=models.CASCADE,
         related_name='forecast_sales_units',
-        verbose_name='всего шт',)
+        verbose_name='всего шт',
+    )
 
     def __str__(self):
         return f'Прогноз продаж: {self.sku_id}в\
