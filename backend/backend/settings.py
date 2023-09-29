@@ -68,6 +68,13 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+
+AUTHENTICATION_BACKENDS = [
+    'users.auth_backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,6 +105,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
@@ -109,9 +117,9 @@ REST_FRAMEWORK = {
 
 
 DJOSER = {
-    'LOGIN_FIELD': 'email',
     'HIDE_USERS': False,
     'SET_PASSWORD_RETYPE': True,
+    'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {
         'user_create': 'users.serializers.CustomUserCreateSerializer',
         'user': 'users.serializers.CustomUserSerializer',
