@@ -10,8 +10,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         model = CustomUser
         fields = (
             'email',
-            'first_name',
-            'last_name',
+            'username',
             'password',
         )
         extra_kwargs = {'password': {'write_only': True}}
@@ -25,7 +24,6 @@ class CustomUserSerializer(UserSerializer):
         fields = (
             'id',
             'email',
-            'first_name',
-            'last_name',
+            'username',
             'password',
         )

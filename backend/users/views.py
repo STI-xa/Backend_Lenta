@@ -8,6 +8,8 @@ from .serializers import (
 
 
 class CustomUserViewSet(UserViewSet):
+    """Вьюсет модели Юзера."""
+
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = (permissions.AllowAny,)

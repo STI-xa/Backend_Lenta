@@ -1,26 +1,12 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import EmailValidator
 from django.db import models
 
-
-class CustomUserManager(BaseUserManager):
-    """Вспомогательный класс для регистрации юзера без юзернейма."""
-
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("The Email field must be set")
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+from .validators import validate_username
 
 
 class CustomUser(AbstractUser):
     """Класс модели пользователя."""
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     email = models.EmailField(
         'Электронная почта',
@@ -31,20 +17,16 @@ class CustomUser(AbstractUser):
             'unique': ('Пользователь с таким email уже существует!'),
         },
     )
-    first_name = models.CharField(
-        'Имя',
+    username = models.CharField(
+        'Лента ID',
         max_length=150,
-    )
-    last_name = models.CharField(
-        'Фамилия',
-        max_length=150,
+        unique=True,
+        validators=(validate_username,)
     )
     password = models.CharField(
         'Пароль',
         max_length=150,
     )
-
-    objects = CustomUserManager()
 
     class Meta:
         ordering = ['-id']
@@ -52,4 +34,4 @@ class CustomUser(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return self.username
