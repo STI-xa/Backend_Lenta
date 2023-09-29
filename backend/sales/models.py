@@ -102,10 +102,25 @@ class Sales(models.Model):
         ordering = ('-date',)
 
 
-class Forecast(Sales):
+class Forecast(models.Model):
+    store_id = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        related_name='sales_store',
+        verbose_name='магазин',
+    )
+    sku_id = models.ForeignKey(
+        SKU,
+        on_delete=models.CASCADE,
+        related_name='sales_sku',
+        verbose_name='товар',
+    )
     forecast_date = models.DateField()
-    forecast = models.JSONField()
-    sales_units = models.JSONField()
+    forecast = models.ForeignKey(
+        Sales,
+        on_delete=models.CASCADE,
+        related_name='forecast_sales_units',
+        verbose_name='всего шт',)
 
     def __str__(self):
         return f'Прогноз продаж: {self.sku_id}в\
