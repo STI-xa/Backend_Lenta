@@ -1,18 +1,18 @@
 from rest_framework import serializers
 
 from sales.models import (
-    Category,
+    SKU,
     Sales,
     Shop,
     Forecast
 )
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class SKUSerializer(serializers.ModelSerializer):
     """Сериализатор товарной иерархии."""
 
     class Meta:
-        model = Category
+        model = SKU
         fields = '__all__'
 
 
