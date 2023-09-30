@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 
+
 from backend.logger import log_exceptions, logger_factory
 from sales.models import SKU, Shop, Sales, Forecast
 from .serializers import (
