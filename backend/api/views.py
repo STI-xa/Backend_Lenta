@@ -1,44 +1,60 @@
-from rest_framework import (
-    viewsets
-)
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework import status
 
-from sales.models import (
-    Category,
-    Sales,
-    Shop,
-    Forecast
-)
+from sales.models import SKU, Shop, Sales, Forecast
 from .serializers import (
+    SKUSerializer,
+    ForecastSerializer,
     CategorySerializer,
     SalesSerializer,
     ShopSerializer,
-    ForecastSerializer
+    ForecastInputSerializer,
+    ForecastOutputSerializer
 )
 
 
-class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет товарной иерархии."""
+class SKUViewSet(viewsets.ModelViewSet):
+    queryset = SKU.objects.all()
+    serializer_class = SKUSerializer
 
-    queryset = Category.objects.all()
+
+class ForecastViewSet(viewsets.ModelViewSet):
+    queryset = Forecast.objects.all()
+    serializer_class = ForecastSerializer
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = SKU.objects.all()
     serializer_class = CategorySerializer
 
 
-class SalesViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет проданных товаров."""
+class SalesViewSet(viewsets.ViewSet):
+    def list(self, request):
+        sales_data = Sales.objects.all()
+        serializer = SalesSerializer(sales_data)
+        return Response(serializer.data)
 
-    queryset = Sales.objects.all()
-    serializer_class = SalesSerializer
 
-
-class ShopViewSet(viewsets.ReadOnlyModelViewSet):
-    """Вьюсет ТЦ."""
-
+class ShopViewSet(viewsets.ModelViewSet):
     queryset = Shop.objects.all()
     serializer_class = ShopSerializer
 
 
-class ForecastViewSet(viewsets.ModelViewSet):
-    """Вьюсет прогноза продаж в ТЦ."""
+class ForecastInputViewSet(viewsets.ViewSet):
+    def create(self, request):
+        serializer = ForecastInputSerializer(data=request.data)
+        if serializer.is_valid():
+            # сохранение данных в БД
+            return Response(
+                serializer.validated_data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    queryset = Forecast.objects.all()
-    serializer_class = ForecastSerializer
+
+class ForecastOutputViewSet(viewsets.ViewSet):
+    def list(self, request):
+        forecast_data = Forecast.objects.all()
+        serializer = ForecastOutputSerializer(forecast_data, many=True)
+        return Response(serializer.data)
