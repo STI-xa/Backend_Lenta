@@ -1,7 +1,13 @@
 from rest_framework import serializers
+
+from backend.logger import log_exceptions, logger_factory
 from sales.models import SKU, Shop, Sales, Forecast
 
 
+logger = logger_factory(__name__)
+
+
+@log_exceptions(logger)
 class SKUSerializer(serializers.ModelSerializer):
     class Meta:
         model = SKU
@@ -13,6 +19,7 @@ class SKUSerializer(serializers.ModelSerializer):
             'pr_uom_id')
 
 
+@log_exceptions(logger)
 class ForecastEntrySerializer(serializers.Serializer):
     date = serializers.DateField()
     sales_type = serializers.IntegerField(source='pr_sales_type_id')
@@ -26,6 +33,7 @@ class ForecastEntrySerializer(serializers.Serializer):
         max_digits=8, decimal_places=1, source='pr_promo_sales_in_rub')
 
 
+@log_exceptions(logger)
 class ForecastSerializer(serializers.ModelSerializer):
     store = serializers.CharField(source='st_id.st_id')
     sku = serializers.CharField(source='pr_sku_id.pr_sku_id')
@@ -36,6 +44,7 @@ class ForecastSerializer(serializers.ModelSerializer):
         fields = ('store', 'sku', 'fact')
 
 
+@log_exceptions(logger)
 class CategorySerializer(serializers.ModelSerializer):
     sku = serializers.CharField(source='pr_sku_id.pr_sku_id')
     group = serializers.CharField(source='pr_group_id')
@@ -48,6 +57,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('sku', 'group', 'category', 'subcategory', 'uom')
 
 
+@log_exceptions(logger)
 class SalesDataSerializer(serializers.ModelSerializer):
     store = serializers.CharField(source='st_id.st_id')
     sku = serializers.CharField(source='pr_sku_id.pr_sku_id')
@@ -61,10 +71,12 @@ class SalesDataSerializer(serializers.ModelSerializer):
         return SalesSerializer(obj.sales_store.all(), many=True).data
 
 
+@log_exceptions(logger)
 class SalesSerializer(serializers.Serializer):
     data = SalesDataSerializer(many=True)
 
 
+@log_exceptions(logger)
 class ShopSerializer(serializers.ModelSerializer):
     store = serializers.CharField(source='st_id')
     city = serializers.CharField(source='st_city_id')
@@ -85,22 +97,26 @@ class ShopSerializer(serializers.ModelSerializer):
                   'is_active')
 
 
+@log_exceptions(logger)
 class ForecastEntryInputSerializer(serializers.Serializer):
     date = serializers.DateField()
     sales_units = serializers.DecimalField(max_digits=6, decimal_places=1)
 
 
+@log_exceptions(logger)
 class ForecastInputSerializer(serializers.Serializer):
     store = serializers.CharField()
     forecast_date = serializers.DateField()
     forecast = serializers.DictField(child=ForecastEntryInputSerializer())
 
 
+@log_exceptions(logger)
 class ForecastEntryOutputSerializer(serializers.Serializer):
     date = serializers.DateField()
     sales_units = serializers.DecimalField(max_digits=6, decimal_places=1)
 
 
+@log_exceptions(logger)
 class ForecastOutputSerializer(serializers.ModelSerializer):
     store = serializers.CharField(source='st_id.st_id')
     forecast_date = serializers.DateField(source='date')
