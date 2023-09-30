@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from backend.logger import log_exceptions, logger_factory
 from sales.models import SKU, Shop, Sales, Forecast
 

@@ -3,24 +3,24 @@ from rest_framework import (
 )
 
 from sales.models import (
-    Category,
+    SKU,
     Sales,
     Shop,
     Forecast
 )
 from .serializers import (
-    CategorySerializer,
+    SKUSerializer,
     SalesSerializer,
     ShopSerializer,
     ForecastSerializer
 )
 
 
-class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
+class SKUViewSet(viewsets.ReadOnlyModelViewSet):
     """Вьюсет товарной иерархии."""
 
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    queryset = SKU.objects.all()
+    serializer_class = SKUSerializer
 
 
 class SalesViewSet(viewsets.ReadOnlyModelViewSet):
