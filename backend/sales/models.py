@@ -116,12 +116,7 @@ class Forecast(models.Model):
         verbose_name='товар',
     )
     date = models.DateField()
-    target = models.ForeignKey(
-        Sales,
-        on_delete=models.CASCADE,
-        related_name='forecast_sales_units',
-        verbose_name='Спрос в шт',
-    )
+    target = models.IntegerField(verbose_name='Спрос в шт',)
 
     def __str__(self):
         return f'Прогноз продаж: {self.pr_sku_id}в\

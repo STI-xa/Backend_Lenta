@@ -1,18 +1,14 @@
-from rest_framework import viewsets
+# from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework import status
-
+from rest_framework.views import APIView
 
 from backend.logger import log_exceptions, logger_factory
 from sales.models import SKU, Shop, Sales, Forecast
 from .serializers import (
     SKUSerializer,
     ForecastSerializer,
-    CategorySerializer,
     SalesSerializer,
     ShopSerializer,
-    ForecastInputSerializer,
-    ForecastOutputSerializer
 )
 
 
@@ -20,53 +16,50 @@ logger = logger_factory(__name__)
 
 
 @log_exceptions(logger)
-class SKUViewSet(viewsets.ModelViewSet):
-    queryset = SKU.objects.all()
-    serializer_class = SKUSerializer
+class CategoryView(APIView):
+    def get(self, request):
+        skus = SKU.objects.all()
+        serializer = SKUSerializer(skus, many=True)
+        return Response({"data": serializer.data})
 
 
 @log_exceptions(logger)
-class ForecastViewSet(viewsets.ModelViewSet):
-    queryset = Forecast.objects.all()
-    serializer_class = ForecastSerializer
+class SalesView(APIView):
+    def get(self, request):
+        sku_id = request.GET.get('sku_id')
+        store_id = request.GET.get('store_id')
+        sales = Sales.objects.filter(pr_sku_id=sku_id, st_id=store_id)
+        serializer = SalesSerializer(sales, many=True)
+        return Response({"data": serializer.data})
 
 
 @log_exceptions(logger)
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = SKU.objects.all()
-    serializer_class = CategorySerializer
+class ShopView(APIView):
+    def get(self, request):
+        shops = Shop.objects.all()
+        serializer = ShopSerializer(shops, many=True)
+        return Response({"data": serializer.data})
 
 
 @log_exceptions(logger)
-class SalesViewSet(viewsets.ViewSet):
-    def list(self, request):
-        sales_data = Sales.objects.all()
-        serializer = SalesSerializer(sales_data)
-        return Response(serializer.data)
+class ForecastView(APIView):
+    def post(self, request):
+        data = request.data.get('data')
+        for item in data:
+            store_id = item.get('store')
+            forecast_date = item.get('forecast_date')
+            forecast_data = item.get('forecast')
+            forecast = Forecast(
+                st_id=store_id,
+                date=forecast_date,
+                forecast=forecast_data
+            )
+            forecast.save()
+        return Response(status=201)
 
-
-@log_exceptions(logger)
-class ShopViewSet(viewsets.ModelViewSet):
-    queryset = Shop.objects.all()
-    serializer_class = ShopSerializer
-
-
-@log_exceptions(logger)
-class ForecastInputViewSet(viewsets.ViewSet):
-    def create(self, request):
-        serializer = ForecastInputSerializer(data=request.data)
-        if serializer.is_valid():
-            # сохранение данных в БД
-            return Response(
-                serializer.validated_data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@log_exceptions(logger)
-class ForecastOutputViewSet(viewsets.ViewSet):
-    def list(self, request):
-        forecast_data = Forecast.objects.all()
-        serializer = ForecastOutputSerializer(forecast_data, many=True)
-        return Response(serializer.data)
+    def get(self, request):
+        sku_id = request.GET.get('sku_id')
+        store_id = request.GET.get('store_id')
+        forecasts = Forecast.objects.filter(st_id=store_id, pr_sku_id=sku_id)
+        serializer = ForecastSerializer(forecasts, many=True)
+        return Response({"data": serializer.data})
