@@ -8,6 +8,8 @@ logger = logger_factory(__name__)
 
 @log_exceptions(logger)
 class SKUSerializer(serializers.ModelSerializer):
+    """Сериализатор товарной иерархии."""
+
     sku = serializers.CharField(source='pr_sku_id')
     group = serializers.CharField(source='pr_group_id')
     category = serializers.CharField(source='pr_cat_id')
@@ -21,6 +23,11 @@ class SKUSerializer(serializers.ModelSerializer):
 
 @log_exceptions(logger)
 class SalesSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор временного ряда с информацией
+    о количестве проданных товаров.
+    """
+
     date = serializers.DateField()
     sales_type = serializers.IntegerField(source='pr_sales_type_id')
     sales_units = serializers.DecimalField(
@@ -46,17 +53,20 @@ class SalesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Sales
-        fields = ('date',
-                  'sales_type',
-                  'sales_units',
-                  'sales_units_promo',
-                  'sales_rub',
-                  'sales_run_promo'
-                  )
+        fields = (
+            'date',
+            'sales_type',
+            'sales_units',
+            'sales_units_promo',
+            'sales_rub',
+            'sales_run_promo'
+        )
 
 
 @log_exceptions(logger)
 class ShopSerializer(serializers.ModelSerializer):
+    """Сериализатор списка ТЦ."""
+
     store = serializers.CharField(source='st_id')
     city = serializers.CharField(source='st_city_id')
     division = serializers.CharField(source='st_division_code_id')
@@ -67,18 +77,21 @@ class ShopSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shop
-        fields = ('store',
-                  'city',
-                  'division',
-                  'type_format',
-                  'loc',
-                  'size',
-                  'is_active'
-                  )
+        fields = (
+            'store',
+            'city',
+            'division',
+            'type_format',
+            'loc',
+            'size',
+            'is_active'
+        )
 
 
 @log_exceptions(logger)
 class ForecastSerializer(serializers.ModelSerializer):
+    """Сериализатор прогноза."""
+
     store = serializers.CharField(source='st_id')
     forecast_date = serializers.DateField(source='date')
     forecast = serializers.JSONField()
