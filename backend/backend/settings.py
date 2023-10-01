@@ -1,9 +1,17 @@
+import os
 from pathlib import Path
+import pathlib
+
+from .logger_config import LoggingSettings
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-=+5-m1f#lav8zkl7&5+y&c1_)$sfqn_813cwg)@6+!#_j)44_g'
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    default='t$(78ef=#zbvr^0_3lpfgmbtr0feo-6dzz!ky-2t9(k^9^%a9g'
+)
 
 DEBUG = True
 
@@ -60,8 +68,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', default='postgres'),
+        'USER': os.getenv('POSTGRES_USER', default='postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='postgres'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default='5432')
     }
 }
 
@@ -131,3 +143,14 @@ DJOSER = {
         'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
     },
 }
+
+# LOG_DIR: pathlib.Path = BASE_DIR / 'logs'
+
+logging_settings = LoggingSettings(
+    log_file=pathlib.Path('./logs'),
+    log_format='"%(asctime)s - [%(levelname)s] - %(message)s"',
+    dt_format='%d.%m.%Y %H:%M:%S',
+    debug=True
+)
+
+logging_settings.init_global_logging_level()

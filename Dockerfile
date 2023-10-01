@@ -4,7 +4,7 @@ ENV DJANGO_SUPERUSER_USERNAME=admin
 ENV DJANGO_SUPERUSER_PASSWORD=adminpassword
 ENV DJANGO_SUPERUSER_EMAIL=admin@example.com
 
-ENV WORKDIR /lenta_app
+ENV WORKDIR /app/backend
 
 WORKDIR $WORKDIR
 
@@ -20,6 +20,8 @@ RUN python manage.py migrate
 RUN python manage.py collectstatic --noinput
 
 RUN python manage.py createsuperuser --noinput
+
+EXPOSE 8000
 
 
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
