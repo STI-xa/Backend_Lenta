@@ -2,6 +2,8 @@ from django.db import models
 
 
 class SKU(models.Model):
+    """Модель с товарной иерархией."""
+
     pr_sku_id = models.CharField(
         primary_key=True,
         max_length=150,
@@ -20,7 +22,9 @@ class SKU(models.Model):
         max_length=150,
         verbose_name='Подкатегория товара',
     )
-    pr_uom_id = models.IntegerField(verbose_name='Единицы измерения',)
+    pr_uom_id = models.IntegerField(
+        verbose_name='Единицы измерения',
+    )
 
     def __str__(self):
         return self.pr_sku_id
@@ -31,6 +35,8 @@ class SKU(models.Model):
 
 
 class Shop(models.Model):
+    """Модель с информацией о ТЦ."""
+
     st_id = models.CharField(
         primary_key=True,
         max_length=150,
@@ -45,10 +51,18 @@ class Shop(models.Model):
         max_length=150,
         verbose_name='Дивизион',
     )
-    st_type_format_id = models.IntegerField(verbose_name='Формат магазина',)
-    st_type_loc_id = models.IntegerField(verbose_name='Тип локации',)
-    st_type_size_id = models.IntegerField(verbose_name='Размер магазина',)
-    st_is_active = models.BooleanField(verbose_name='Флаг активности',)
+    st_type_format_id = models.IntegerField(
+        verbose_name='Формат магазина',
+    )
+    st_type_loc_id = models.IntegerField(
+        verbose_name='Тип локации',
+    )
+    st_type_size_id = models.IntegerField(
+        verbose_name='Размер магазина',
+    )
+    st_is_active = models.BooleanField(
+        verbose_name='Флаг активности',
+    )
 
     def __str__(self):
         return self.st_id
@@ -59,20 +73,26 @@ class Shop(models.Model):
 
 
 class Sales(models.Model):
+    """Модель с продажами определённой позиции товара."""
+
     st_id = models.ForeignKey(
         Shop,
         on_delete=models.CASCADE,
         related_name='sales_store',
-        verbose_name='магазин',
+        verbose_name='Магазин',
     )
     pr_sku_id = models.ForeignKey(
         SKU,
         on_delete=models.CASCADE,
         related_name='sales_sku',
-        verbose_name='товар',
+        verbose_name='Товар',
     )
-    date = models.DateField(verbose_name='Дата продаж',)
-    pr_sales_type_id = models.IntegerField(verbose_name='Флаг наличия промо',)
+    date = models.DateField(
+        verbose_name='Дата продаж',
+    )
+    pr_sales_type_id = models.IntegerField(
+        verbose_name='Флаг наличия промо',
+    )
     pr_sales_in_units = models.DecimalField(
         max_digits=6,
         decimal_places=1,
@@ -95,10 +115,11 @@ class Sales(models.Model):
     )
 
     def __str__(self):
-        return f'Продажи: {self.pr_sku_id} в {self.st_id}'
+        return f'Продажи {self.pr_sku_id} в {self.st_id} - {self.date}'
 
     class Meta:
-        verbose_name = 'Продажи'
+        verbose_name = 'Продажи определённой позиции'
+        verbose_name_plural = 'Продажи определённой позиции'
         ordering = ('-date',)
 
 

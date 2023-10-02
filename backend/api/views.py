@@ -1,47 +1,61 @@
-# from rest_framework import viewsets
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
 
-from backend.logger import log_exceptions, logger_factory
-from sales.models import SKU, Shop, Sales, Forecast
+from sales.models import (
+    SKU,
+    Shop,
+    Sales,
+    Forecast
+)
 from .serializers import (
     SKUSerializer,
     ForecastSerializer,
-    SalesSerializer,
+    SalesShowSerializer,
     ShopSerializer,
 )
 
 
-logger = logger_factory(__name__)
+class SKUViewsSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет товарной иерархии - работает с GET-запросами."""
+
+    queryset = SKU.objects.all()
+    serializer_class = SKUSerializer
 
 
-@log_exceptions(logger)
-class CategoryView(APIView):
-    def get(self, request):
-        skus = SKU.objects.all()
-        serializer = SKUSerializer(skus, many=True)
-        return Response({"data": serializer.data})
+class ShopViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет для возвращения списка ТЦ."""
+
+    serializer_class = ShopSerializer
+    queryset = Shop.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = [
+        'st_city_id',
+        'st_division_code_id',
+        'st_type_format_id',
+        'st_type_loc_id'
+    ]
 
 
-@log_exceptions(logger)
-class SalesView(APIView):
-    def get(self, request):
-        sku_id = request.GET.get('sku_id')
-        store_id = request.GET.get('store_id')
-        sales = Sales.objects.filter(pr_sku_id=sku_id, st_id=store_id)
-        serializer = SalesSerializer(sales, many=True)
-        return Response({"data": serializer.data})
+class SalesViewSet(viewsets.ReadOnlyModelViewSet):
+    """Вьюсет модели продаж."""
+
+    serializer_class = SalesShowSerializer
+
+    def get_queryset(self):
+        store = self.request.GET.get('store')
+        sku = self.request.GET.get('sku')
+
+        if store and sku:
+            queryset = Sales.objects.filter(
+                st_id=store, pr_sku_id=sku
+            )
+            return queryset
+
+        return Sales.objects.none()
 
 
-@log_exceptions(logger)
-class ShopView(APIView):
-    def get(self, request):
-        shops = Shop.objects.all()
-        serializer = ShopSerializer(shops, many=True)
-        return Response({"data": serializer.data})
-
-
-@log_exceptions(logger)
 class ForecastView(APIView):
     def post(self, request):
         data = request.data.get('data')
@@ -58,8 +72,8 @@ class ForecastView(APIView):
         return Response(status=201)
 
     def get(self, request):
-        sku_id = request.GET.get('sku_id')
-        store_id = request.GET.get('store_id')
+        sku_id = request.GET.get('sku')
+        store_id = request.GET.get('store')
         forecasts = Forecast.objects.filter(st_id=store_id, pr_sku_id=sku_id)
         serializer = ForecastSerializer(forecasts, many=True)
         return Response({"data": serializer.data})
