@@ -1,12 +1,7 @@
 from rest_framework import serializers
-from backend.logger import log_exceptions, logger_factory
 from sales.models import SKU, Shop, Sales, Forecast
 
 
-logger = logger_factory(__name__)
-
-
-@log_exceptions(logger)
 class SKUSerializer(serializers.ModelSerializer):
     """Сериализатор товарной иерархии."""
 
@@ -21,7 +16,6 @@ class SKUSerializer(serializers.ModelSerializer):
         fields = ('sku', 'group', 'category', 'subcategory', 'uom')
 
 
-@log_exceptions(logger)
 class SalesSerializer(serializers.ModelSerializer):
     """
     Сериализатор временного ряда с информацией
@@ -63,13 +57,12 @@ class SalesSerializer(serializers.ModelSerializer):
         )
 
 
-@log_exceptions(logger)
 class ShopSerializer(serializers.ModelSerializer):
     """Сериализатор списка ТЦ."""
 
     store = serializers.CharField(source='st_id')
     city = serializers.CharField(source='st_city_id')
-    division = serializers.CharField(source='st_division_code_id')
+    division = serializers.CharField(source='st_division_code')
     type_format = serializers.IntegerField(source='st_type_format_id')
     loc = serializers.IntegerField(source='st_type_loc_id')
     size = serializers.IntegerField(source='st_type_size_id')
@@ -88,7 +81,6 @@ class ShopSerializer(serializers.ModelSerializer):
         )
 
 
-@log_exceptions(logger)
 class ForecastSerializer(serializers.ModelSerializer):
     """Сериализатор прогноза."""
 

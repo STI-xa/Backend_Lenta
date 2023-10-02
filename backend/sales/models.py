@@ -41,7 +41,7 @@ class Shop(models.Model):
         max_length=150,
         verbose_name='Город',
     )
-    st_division_code_id = models.CharField(
+    st_division_code = models.CharField(
         max_length=150,
         verbose_name='Дивизион',
     )
