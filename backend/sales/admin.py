@@ -18,7 +18,7 @@ class ShopAdmin(admin.ModelAdmin):
     list_display = (
         'st_id',
         'st_city_id',
-        'st_division_code_id',
+        'st_division_code',
         'st_type_format_id',
         'st_type_loc_id',
         'st_type_size_id',

@@ -1,3 +1,4 @@
+
 from datetime import date
 
 from rest_framework import serializers
@@ -50,7 +51,7 @@ class ShopSerializer(serializers.ModelSerializer):
         source='st_city_id'
     )
     division = serializers.CharField(
-        source='st_division_code_id'
+        source='st_division_code'
     )
     type_format = serializers.IntegerField(
         source='st_type_format_id'
