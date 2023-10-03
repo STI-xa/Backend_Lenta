@@ -29,8 +29,6 @@ class ShopAdmin(admin.ModelAdmin):
 @admin.register(Sales)
 class SalesAdmin(admin.ModelAdmin):
     list_display = (
-        'st_id',
-        'pr_sku_id',
         'date',
         'pr_sales_type_id',
         'pr_sales_in_units',
