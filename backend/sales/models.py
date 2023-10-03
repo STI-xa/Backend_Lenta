@@ -144,9 +144,10 @@ class Forecast(models.Model):
     date = models.DateField()
 
     def __str__(self):
-        return f'Прогноз продаж: {self.pr_sku_id}в\
-            {self.st_id} {self.date}'
+        return f'Прогноз продаж: {self.pr_sku_id}\
+            в {self.st_id} {self.date}'
 
     class Meta:
         verbose_name = 'Прогноз'
         verbose_name_plural = 'Прогнозы'
+        ordering = ('date',)

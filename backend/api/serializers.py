@@ -139,7 +139,7 @@ class SalesShowSerializer(serializers.ModelSerializer):
             'sku',
             'fact'
         )
-    
+
     def get_fact(self, obj):
         sales_query = Sales.objects.filter(
             st_id=obj.st_id,
@@ -215,24 +215,51 @@ class ForecastGetSerializer(serializers.ModelSerializer):
         return forecast_data
 
 
+class SalesUnitsSerializer(serializers.Serializer):
+    """Вспомогательный сериализатор для корректного POST запроса."""
+
+    sku = serializers.CharField()
+    sales_units = serializers.DictField()
+
+
 class ForecastPostSerializer(serializers.ModelSerializer):
     """Сериализатор прогноза для метода POST."""
 
-    store = serializers.CharField(
-        source='st_id'
-    )
-    sku = serializers.CharField(
-        source='pr_sku_id'
-    )
-    forecast_date = serializers.DateField(
-        source='date'
-    )
-    # forecast = serializers.SerializerMethodField()
+    store = serializers.CharField()
+    forecast_date = serializers.SerializerMethodField()
+    forecast = SalesUnitsSerializer()
 
     class Meta:
         model = Forecast
         fields = (
             'store',
-            'sku',
-            'forecast_date'
+            'forecast_date',
+            'forecast'
         )
+
+    def get_forecast_date(self, obj):
+        """Получаем текущую дату в момент запроса."""
+
+        return date.today()
+
+    def create(self, validated_data):
+        """Записываем полученный JSON в БД."""
+
+        store_name = validated_data['store']
+        forecast_data = validated_data['forecast']
+
+        sku = forecast_data['sku']
+        sales_units_data = forecast_data['sales_units']
+
+        shop = Shop.objects.get(st_id=store_name)
+        product = SKU.objects.get(pr_sku_id=sku)
+
+        for date, target in sales_units_data.items():
+            Forecast.objects.create(
+                st_id=shop,
+                pr_sku_id=product,
+                target=target,
+                date=date
+            )
+
+        return validated_data
