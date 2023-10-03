@@ -7,14 +7,15 @@ from sales.models import (
     SKU,
     Shop,
     Sales,
-    Forecast
+    Forecast,
 )
 from .serializers import (
     SKUSerializer,
-    ForecastSerializer,
-    SalesShowSerializer,
     ShopSerializer,
+    SalesShowSerializer,
+    ForecastGetSerializer,
 )
+from .mixins import CreateRetrieveMixin
 
 
 class SKUViewsSet(viewsets.ReadOnlyModelViewSet):
@@ -56,24 +57,47 @@ class SalesViewSet(viewsets.ReadOnlyModelViewSet):
         return Sales.objects.none()
 
 
-class ForecastView(APIView):
-    def post(self, request):
-        data = request.data.get('data')
-        for item in data:
-            store_id = item.get('store')
-            forecast_date = item.get('forecast_date')
-            forecast_data = item.get('forecast')
-            forecast = Forecast(
-                st_id=store_id,
-                date=forecast_date,
-                forecast=forecast_data
-            )
-            forecast.save()
-        return Response(status=201)
+# class ForecastView(APIView):
+#     def post(self, request):
+#         data = request.data.get('data')
+#         for item in data:
+#             store_id = item.get('store')
+#             forecast_date = item.get('forecast_date')
+#             forecast_data = item.get('forecast')
+#             forecast = Forecast(
+#                 st_id=store_id,
+#                 date=forecast_date,
+#                 forecast=forecast_data
+#             )
+#             forecast.save()
+#         return Response(status=201)
 
-    def get(self, request):
-        sku_id = request.GET.get('sku')
-        store_id = request.GET.get('store')
-        forecasts = Forecast.objects.filter(st_id=store_id, pr_sku_id=sku_id)
-        serializer = ForecastSerializer(forecasts, many=True)
-        return Response({"data": serializer.data})
+#     def get(self, request):
+#         sku_id = request.GET.get('sku')
+#         store_id = request.GET.get('store')
+#         forecasts = Forecast.objects.filter(st_id=store_id, pr_sku_id=sku_id)
+#         serializer = ForecastSerializer(forecasts, many=True)
+#         return Response({"data": serializer.data})
+
+
+class ForecastViewSet(CreateRetrieveMixin, viewsets.GenericViewSet):
+    """Вьюсет для публикации и получения прогноза."""
+
+    # def get_serializer_class(self):
+    #     pass
+    serializer_class = ForecastGetSerializer
+
+    def get_queryset(self):
+        queryset = Forecast.objects.all()
+        store = self.request.GET.get('store')
+        sku = self.request.GET.get('sku')
+
+        if store and sku:
+            queryset = queryset.filter(st_id=store, pr_sku_id=sku)
+
+        return queryset
+
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     serialized_data = ForecastGetSerializer(queryset, many=True).data
+    #     return Response(serialized_data)

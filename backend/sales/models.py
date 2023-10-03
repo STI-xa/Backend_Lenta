@@ -124,20 +124,24 @@ class Sales(models.Model):
 
 
 class Forecast(models.Model):
+    """Модель с предсказанием продаж за определённое число."""
+
     st_id = models.ForeignKey(
         Shop,
         on_delete=models.CASCADE,
-        related_name='store_forecast',
-        verbose_name='магазин',
+        related_name='forecast_store',
+        verbose_name='Магазин',
     )
     pr_sku_id = models.ForeignKey(
         SKU,
         on_delete=models.CASCADE,
-        related_name='sku_forecast',
-        verbose_name='товар',
+        related_name='forecast_sku',
+        verbose_name='Товар',
+    )
+    target = models.IntegerField(
+        verbose_name='Спрос в шт',
     )
     date = models.DateField()
-    target = models.IntegerField(verbose_name='Спрос в шт',)
 
     def __str__(self):
         return f'Прогноз продаж: {self.pr_sku_id}в\

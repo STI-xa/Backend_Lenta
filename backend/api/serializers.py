@@ -1,3 +1,5 @@
+from datetime import date
+
 from rest_framework import serializers
 
 from sales.models import (
@@ -148,13 +150,89 @@ class SalesShowSerializer(serializers.ModelSerializer):
         return serializer.data
 
 
-class ForecastSerializer(serializers.ModelSerializer):
-    """Сериализатор прогноза."""
-
-    store = serializers.CharField(source='st_id')
-    forecast_date = serializers.DateField(source='date')
-    forecast = serializers.JSONField()
+class ForecastDateTargetSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор возвращающий данные в формате:
+    {
+        "date": target
+    }
+    """
 
     class Meta:
         model = Forecast
-        fields = ('store', 'forecast_date', 'forecast')
+        fields = (
+            'date',
+            'target'
+        )
+
+    def to_representation(self, instance):
+        return {instance.date.strftime('%Y-%m-%d'): instance.target}
+
+
+class ForecastGetSerializer(serializers.ModelSerializer):
+    """Сериализатор прогноза для метода GET."""
+
+    store = serializers.CharField(
+        source='st_id'
+    )
+    sku = serializers.CharField(
+        source='pr_sku_id'
+    )
+    forecast_date = serializers.SerializerMethodField()
+    forecast = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Forecast
+        fields = (
+            'store',
+            'sku',
+            'forecast_date',
+            'forecast'
+        )
+
+    def get_forecast_date(self, obj):
+        """Получаем текущую дату в момент запроса."""
+
+        return date.today()
+
+    def get_forecast(self, obj):
+        """
+        Фильтруем выдаваемые объекты модели и
+        возвращаем записи, связанные с ней.
+        """
+
+        forecast_query = Forecast.objects.filter(
+            st_id=obj.st_id,
+            pr_sku_id=obj.pr_sku_id
+        )
+        serializer = ForecastDateTargetSerializer(forecast_query, many=True)
+
+        forecast_data = {}
+
+        for data in serializer.data:
+            forecast_data.update(data)
+
+        return forecast_data
+
+
+class ForecastPostSerializer(serializers.ModelSerializer):
+    """Сериализатор прогноза для метода POST."""
+
+    store = serializers.CharField(
+        source='st_id'
+    )
+    sku = serializers.CharField(
+        source='pr_sku_id'
+    )
+    forecast_date = serializers.DateField(
+        source='date'
+    )
+    # forecast = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Forecast
+        fields = (
+            'store',
+            'sku',
+            'forecast_date'
+        )

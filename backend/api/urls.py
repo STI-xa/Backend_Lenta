@@ -6,7 +6,7 @@ from .views import (
     SKUViewsSet,
     SalesViewSet,
     ShopViewSet,
-    ForecastView
+    ForecastViewSet
 )
 
 
@@ -18,11 +18,12 @@ router.register(r'users', CustomUserViewSet)
 router.register(r'categories', SKUViewsSet, basename='sku')
 router.register(r'sales', SalesViewSet, basename='sale')
 router.register(r'shops', ShopViewSet, basename='shop')
-# router.register(r'forecast', ForecastViewSet)
+router.register(r'forecast', ForecastViewSet, basename='forecast')
 
 
 urlpatterns = [
     path('v1/', include(router.urls)),
-    path('v1/auth/', include('djoser.urls.authtoken')),
-    path('v1/forecast/', ForecastView.as_view(), name='forecast'),
+    path('v1/auth/', include('djoser.urls.authtoken'))
 ]
+
+# path('v1/forecast/', ForecastView.as_view(), name='forecast'),
