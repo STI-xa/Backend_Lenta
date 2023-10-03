@@ -1,8 +1,5 @@
-FROM python:3.11
+FROM python:3.11.4-slim
 
-ENV DJANGO_SUPERUSER_USERNAME=admin
-ENV DJANGO_SUPERUSER_PASSWORD=adminpassword
-ENV DJANGO_SUPERUSER_EMAIL=admin@example.com
 
 ENV WORKDIR /app/backend
 
@@ -15,13 +12,7 @@ RUN pip3 install -r requirements.txt --no-cache-dir
 
 COPY . .
 
-RUN python manage.py migrate
-
-RUN python manage.py collectstatic --noinput
-
-RUN python manage.py createsuperuser --noinput
-
 EXPOSE 8000
 
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["gunicorn", "foodgram_project.wsgi:application", "--bind", "0:8000" ]
