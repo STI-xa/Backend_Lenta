@@ -3,7 +3,7 @@ version: "3.8"
 services:
   postgres: 
     image: postgres:${POSTGRES_VERSION}
-    container_name: lenta-postgres
+    container_name: postgres
     hostname: ${POSTGRES_HOST}
     restart: on-failure
     ports:
@@ -16,46 +16,39 @@ services:
       - ./.env
 
   backend:
-    build: ./backend
+    build: ../
     container_name: lenta-backend
     restart: on-failure
     volumes:
       - lenta_static_data:/app/static/
-      - lents_media_data:/app/media/
+      - lenta_media_data:/app/media/
     depends_on:
       - postgres
     env_file:
       - ./.env
-    command: sh -c 'python manage.py collectstatic --noinput && python manage.py createsuperuser --noinput && python manage.py migrate'
-
-  # frontend:
-  #   image: stixaxa/foodgram_frontend:latest
-  #   volumes:
-  #     - ../frontend/:/app/result_build/
-  #   depends_on:
-  #     - backend
+    command: sh -c 'python manage.py collectstatic --noinput && python manage.py makemigrations && python manage.py migrate && python manage.py createsuperuser --noinput && python manage.py load_sku_data && python manage.py load_shop_data && python manage.py load_sales_data'
 
       
   nginx:
     image: nginx:${NGINX_VERSION}
-    container_name: lenta-nginx
-    hostname: ${NGINX_HOST}
+    container_name: nginx
     restart: on-failure
     ports:
-      - ${SERVER_PORT}:${SERVER_PORT}
-    expose:
-      - ${SERVER_PORT}
+      - 80:80
+
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/site.conf.template:/etc/nginx/templates/site.conf.template:ro
+      - ./nginx/default.conf:/etc/nginx.conf/default.conf
+      - ../docs/:/usr/share/nginx/html/api/docs/
       - lenta_static_data:/data/static/
-      - lenta:/data/media/
+      - lenta_media_data:/data/media/
 
     depends_on:
       - backend
-      - frontend
+
+    env_file:
+      - ./.env
 
 volumes:
-  culture_postgresql_data:
-  culture_static_data:
-  culture_media_data:
+  lenta_postgresql_data:
+  lenta_static_data:
+  lenta_media_data:
