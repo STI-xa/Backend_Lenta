@@ -74,8 +74,8 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 #         'NAME': os.getenv('DB_NAME', 'postgres'),
 #         'USER': os.getenv('POSTGRES_USER', 'postgres_user'),
 #         'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-#         'HOST': os.getenv('DB_HOST', ''),
-#         'PORT': os.getenv('DB_PORT', 5432)
+#         'HOST': os.getenv('POSTGRES_HOST', ''),
+#         'PORT': os.getenv('POSTGRES_PORT', 5432)
 #     }
 # }
 
@@ -167,3 +167,11 @@ logging_settings = LoggingSettings(
 )
 
 logging_settings.init_global_logging_level()
+
+
+SWAGGER_SETTINGS = {
+    'DEFAULT_GENERATOR_CLASS': 'drf_yasg.generators.OpenAPISchemaGenerator',
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+    'DEFAULT_INFO': 'your_project.urls.swagger_info',
+    'USE_SESSION_AUTH': False,
+}
