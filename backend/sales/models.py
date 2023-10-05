@@ -1,72 +1,153 @@
 from django.db import models
 
 
-class Store(models.Model):
-    st_id = models.CharField(max_length=100, primary_key=True)
-    st_city_id = models.CharField(max_length=100)
-    st_division_code = models.CharField(max_length=100)
-    st_type_format_id = models.CharField(max_length=100)
-    st_type_loc_id = models.CharField(max_length=100)
-    st_type_size_id = models.CharField(max_length=100)
-    st_is_active = models.BooleanField(default=True)
+class SKU(models.Model):
+    """Модель с товарной иерархией."""
 
-    def __str__(self):
-        return self.st_id
-
-
-class ProductGroup(models.Model):
-    pr_group_id = models.CharField(max_length=100, primary_key=True)
-
-    def __str__(self):
-        return self.pr_group_id
-
-
-class ProductCategory(models.Model):
-    pr_cat_id = models.CharField(max_length=100, primary_key=True)
-    pr_group = models.ForeignKey(ProductGroup, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.pr_cat_id
-
-
-class ProductSubcategory(models.Model):
-    pr_subcat_id = models.CharField(max_length=100, primary_key=True)
-    pr_cat = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.pr_subcat_id
-
-
-class Product(models.Model):
-    pr_sku_id = models.CharField(max_length=100, primary_key=True)
-    pr_group = models.ForeignKey(ProductGroup, on_delete=models.CASCADE)
-    pr_cat = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
-    pr_subcat = models.ForeignKey(ProductSubcategory, on_delete=models.CASCADE)
-    pr_uom_id = models.CharField(max_length=100)
+    pr_sku_id = models.CharField(
+        primary_key=True,
+        max_length=150,
+        verbose_name='Товар',
+        db_index=True,
+    )
+    pr_group_id = models.CharField(
+        max_length=150,
+        verbose_name='Группа товара',
+    )
+    pr_cat_id = models.CharField(
+        max_length=150,
+        verbose_name='Категория товара',
+    )
+    pr_subcat_id = models.CharField(
+        max_length=150,
+        verbose_name='Подкатегория товара',
+    )
+    pr_uom_id = models.IntegerField(
+        verbose_name='Единицы измерения',
+    )
 
     def __str__(self):
         return self.pr_sku_id
 
-
-class CommonFields(models.Model):
-    st = models.ForeignKey(Store, on_delete=models.CASCADE)
-    pr_sku = models.ForeignKey(Product, on_delete=models.CASCADE)
-    date = models.DateField()
-
     class Meta:
-        abstract = True
+        verbose_name = 'Товар'
+        verbose_name_plural = 'Товары'
 
 
-class Sales(CommonFields):
-    pr_sales_type_id = models.BooleanField()
-    pr_sales_in_units = models.IntegerField()
-    pr_promo_sales_in_units = models.IntegerField()
-    pr_sales_in_rub = models.FloatField()
-    pr_promo_sales_in_rub = models.FloatField()
+class Shop(models.Model):
+    """Модель с информацией о ТЦ."""
 
-
-class SalesSubmission(CommonFields):
-    target = models.IntegerField(default=0)
+    st_id = models.CharField(
+        primary_key=True,
+        max_length=150,
+        verbose_name='Магазин',
+        db_index=True,
+    )
+    st_city_id = models.CharField(
+        max_length=150,
+        verbose_name='Город',
+    )
+    st_division_code = models.CharField(
+        max_length=150,
+        verbose_name='Дивизион',
+    )
+    st_type_format_id = models.IntegerField(
+        verbose_name='Формат магазина',
+    )
+    st_type_loc_id = models.IntegerField(
+        verbose_name='Тип локации',
+    )
+    st_type_size_id = models.IntegerField(
+        verbose_name='Размер магазина',
+    )
+    st_is_active = models.BooleanField(
+        verbose_name='Флаг активности',
+    )
 
     def __str__(self):
-        return f'{self.st} - {self.pr_sku}'
+        return self.st_id
+
+    class Meta:
+        verbose_name = 'Магазин'
+        verbose_name_plural = 'Магазины'
+
+
+class Sales(models.Model):
+    """Модель с продажами определённой позиции товара."""
+
+    st_id = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        related_name='sales_store',
+        verbose_name='Магазин',
+    )
+    pr_sku_id = models.ForeignKey(
+        SKU,
+        on_delete=models.CASCADE,
+        related_name='sales_sku',
+        verbose_name='Товар',
+    )
+    date = models.DateField(
+        verbose_name='Дата продаж',
+    )
+    pr_sales_type_id = models.IntegerField(
+        verbose_name='Флаг наличия промо',
+    )
+    pr_sales_in_units = models.DecimalField(
+        max_digits=6,
+        decimal_places=1,
+        verbose_name='Число проданных товаров без промо',
+    )
+    pr_promo_sales_in_units = models.DecimalField(
+        max_digits=6,
+        decimal_places=1,
+        verbose_name='Число проданных товаров c промо',
+    )
+    pr_sales_in_rub = models.DecimalField(
+        max_digits=8,
+        decimal_places=1,
+        verbose_name='Продажи без промо в руб',
+    )
+    pr_promo_sales_in_rub = models.DecimalField(
+        max_digits=8,
+        decimal_places=1,
+        verbose_name='Продажи c промо в руб',
+    )
+
+    def __str__(self):
+        return f'Продажи {self.pr_sku_id} в {self.st_id} - {self.date}'
+
+    class Meta:
+        verbose_name = 'Продажи определённой позиции'
+        verbose_name_plural = 'Продажи определённой позиции'
+        ordering = ('-date',)
+
+
+class Forecast(models.Model):
+    """Модель с предсказанием продаж за определённое число."""
+
+    st_id = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        related_name='forecast_store',
+        verbose_name='Магазин',
+    )
+    pr_sku_id = models.ForeignKey(
+        SKU,
+        on_delete=models.CASCADE,
+        related_name='forecast_sku',
+        verbose_name='Товар',
+    )
+    target = models.IntegerField(
+        verbose_name='Спрос в шт',
+    )
+    date = models.DateField()
+
+    def __str__(self):
+        return f'Прогноз продаж: {self.pr_sku_id}\
+            в {self.st_id} {self.date}'
+
+    class Meta:
+        verbose_name = 'Прогноз'
+        verbose_name_plural = 'Прогнозы'
+        ordering = ('date',)
