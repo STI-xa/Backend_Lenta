@@ -1,56 +1,30 @@
 version: "3.8"
 
+volumes:
+  lenta_pg_data:
+  lenta_static:
+
 services:
-  postgres: 
+  db: 
     image: postgres:15
-    container_name: postgres
-    restart: always
-    ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    volumes:
-      - lenta_postgresql_data:/var/lib/postgresql/data
     env_file: .env
+    volumes:
+      - lenta_pg_data:/var/lib/postgresql/data
 
   backend:
     image: anstane/lenta_backend
-    container_name: lenta-backend
-    volumes:
-      - lenta_static_data:/app/static_backend/
-      - lenta_media_data:/app/media/
-    depends_on:
-      - postgres
     env_file: .env
-    command: 
-      sh -c "python manage.py collectstatic --noinput &&
-             python manage.py makemigrations sales &&
-             python manage.py makemigrations users &&
-             python manage.py migrate &&
-             python manage.py migrate --run-syncdb &&
-             python manage.py createsuperuser --noinput &&
-             python manage.py load_sku_data &&
-             python manage.py load_shop_data &&
-             gunicorn backend.wsgi --bind localhost:8000"
+    volumes:
+      - lenta_static:/backend_static
+    command: ./start_backend.sh
+    depends_on:
+      - db
 
-      
-  nginx:
-    image: nginx:1.23.3
-    container_name: nginx
-    restart: always
+  gateway:
+    image: nginx:1.22.1
+    env_file: .env
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - lenta_static:/staticfiles/
     ports:
-      - "8000:80"
-
-    volumes:
-      - ./nginx.conf:/etc/nginx.conf/default.conf
-      - ../docs/:/usr/share/nginx/html/api/docs/
-      - lenta_static_data:/var/html/static_backend/
-      - lenta_media_data:/var/html/media/
-
-    depends_on:
-      - backend
-
-    env_file: .env
-
-volumes:
-  lenta_postgresql_data:
-  lenta_static_data:
-  lenta_media_data:
+      - 8000:80
