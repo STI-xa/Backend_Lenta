@@ -1,14 +1,9 @@
 FROM python:3.11-slim
-
-ENV WORKDIR /app
-WORKDIR $WORKDIR
-
-COPY requirements.txt .
-
+WORKDIR /app
+COPY requirements.txt ./
 RUN pip3 install --upgrade pip
-RUN apt-get update && apt-get install -y libpq-dev gcc
 RUN pip3 install -r requirements.txt --no-cache-dir
-
-COPY . .
-
-EXPOSE 8000
+COPY . ./
+COPY start_backend.sh /app/start_backend.sh
+RUN chmod +x /app/start_backend.sh
+CMD ["/app/start_backend.sh"]
