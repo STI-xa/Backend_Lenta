@@ -32,7 +32,7 @@ class ShopViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = [
         'st_city_id',
-        'st_division_code_id',
+        'st_division_code',
         'st_type_format_id',
         'st_type_loc_id'
     ]
