@@ -7,10 +7,8 @@ from .models import CustomUser
 @admin.register(CustomUser)
 class UserAdmin(UserAdmin):
     list_display = (
-        'email',
         'username',
     )
     search_fields = (
-        'email',
         'username',
     )

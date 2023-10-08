@@ -11,11 +11,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField(
         'Электронная почта',
         max_length=254,
-        unique=True,
         validators=[EmailValidator()],
         error_messages={
             'unique': ('Пользователь с таким email уже существует!'),
         },
+        blank=True, null=True
     )
     username = models.CharField(
         'Лента ID',
