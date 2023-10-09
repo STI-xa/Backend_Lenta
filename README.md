@@ -100,9 +100,9 @@ is_active*	Is active[...]
  
 }
 ```
-![Imgur](https://imgur.com/LaFxvmD)
-![Imgur](https://imgur.com/xbvXlCu)
-![Imgur](https://imgur.com/sagBzw2)
+[Imgur](https://imgur.com/LaFxvmD)
+[Imgur](https://imgur.com/xbvXlCu)
+[Imgur](https://imgur.com/sagBzw2)
 ____
 
 # **Разработчики:**
