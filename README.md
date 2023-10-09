@@ -7,7 +7,7 @@
 ![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
 ![image](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
-# **Hackathon_lenta_backend** 
+# **Hackathon_lenta_backend**
 
 Backend часть для проекта хакатона Практикум х Лента. 
 Основной функционал всего проекта- создать интерфейс и алгоритм прогноза спроса на 14 дней для товаров собственного производства сети Лента.
@@ -46,7 +46,7 @@ DB_PORT=5432 # порт для подключения к БД
 
 * Создание и запуск контейнеров:
 ```
-docker-compose up -d --build
+docker-compose up --build
 ```
 
 * Создаем дамп БД:
