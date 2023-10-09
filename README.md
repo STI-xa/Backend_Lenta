@@ -1,6 +1,7 @@
 # **Hackathon_lenta_backend** 
 
-Backend часть для проекта хакатона Практикум х Лента. Основной функционал проекта- создать интерфейс и алгоритм прогноза спроса на 14 дней для товаров собственного производства сети Лента.
+Backend часть для проекта хакатона Практикум х Лента. 
+Основной функционал всего проекта- создать интерфейс и алгоритм прогноза спроса на 14 дней для товаров собственного производства сети Лента.
 
 **Как работает:**
 
@@ -15,40 +16,7 @@ ___
 ___
 ## **Как запустить проект**:
 
-### **Для Windows, локально, только бэкенд :**
-
-* Клонировать репозиторий и перейти в него в командной строке:
-```
-git clone git@github.com:Anstane/hackathon_lenta_backend.git
-
-cd backend
-```
-
-* Cоздать и активировать виртуальное окружение:
-```
-python -m venv venv
-
-source venv/Scripts/activate
-```
-
-* Установить зависимости из файла requirements.txt:
-```
-python -m pip install --upgrade pip
-
-pip install -r requirements.txt
-```
-
-* Выполнить миграции:
-```
-python manage.py migrate
-```
-
-* Запустить проект:
-```
-python manage.py runserver
-```
-
-### **Запуск из контейнера (все части проекта):**
+### **Запуск из контейнера:**
 * Клонировать репозиторий и перейти в папку infra в командной строке:
 ```
 git clone https://github.com/anstane/lenta_backend
@@ -56,15 +24,6 @@ git clone https://github.com/anstane/lenta_backend
 cd infra
 ```
 
-* Создание и запуск контейнеров:
-```
-docker-compose up -d --build
-```
-
-* Создаем дамп БД:
-```
-docker-compose exec backend python manage.py dumpdata > fixtures.json
-```
 * Создаем в папке infra .env файл и записываем переменные окружения.
 ## Шаблон наполнения env-файла:
 ```
@@ -76,13 +35,66 @@ DB_HOST=db # название сервиса (контейнера)
 DB_PORT=5432 # порт для подключения к БД
 ```
 
-### **Образ доступен на** [DockerHub](https://hub.docker.com/repository/docker/)
+* Создание и запуск контейнеров:
+```
+docker-compose up -d --build
+```
+
+* Создаем дамп БД:
+```
+docker-compose exec backend python manage.py dumpdata > fixtures.json
+```
+
+### **Образ доступен на** [DockerHub](https://hub.docker.com/u/anstane)
 ___
 ## **Примеры запросов**:
+POST-запрос для логина 
+```
+http://127.0.0.1:8000/api/v1/auth/token/login/
+```
+```
+{
+password	Password[...]
+username	Username[...]
+ 
+}
+```
 
+GET-запрос для получения прогноза
+```
+http://127.0.0.1:8000/api/v1/forecast/{id}/
+```
+```
+{
+store*	Store[...]
+sku*	Sku[...]
+forecast_date	Forecast date[...]
+forecast	Forecast[...]
+ 
+}
+```
+
+GET-запрос на получение списка магазинов
+```
+http://127.0.0.1:8000/api/v1/shops/
+```
+```
+{
+store*	Store[...]
+city*	City[...]
+division*	Division[...]
+type_format*	Type format[...]
+loc*	Loc[...]
+size*	Size[...]
+is_active*	Is active[...]
+ 
+}
+```
+### **Образ доступен на** [DockerHub](https://hub.docker.com/u/anstane)
 ____
 # **Разработчики:**
 [Михаил Московкин](https://github.com/Anstane) - Разработчик
+
 [Полина Николаева](https://github.com/STI-xa) - Разработчик
 ___
 ## **Стэк технологий**:
