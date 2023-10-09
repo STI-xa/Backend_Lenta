@@ -100,10 +100,9 @@ is_active*	Is active[...]
  
 }
 ```
-![Imgur](https://imgur.com/LaFxvmD)
-![Imgur](https://imgur.com/xbvXlCu)
-![Imgur](<blockquote class="imgur-embed-pub" lang="en" data-id="sagBzw2" data-context="false" ><a href="//imgur.com/sagBzw2"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>)
-____
+![imagedc462967381d48d9.png](https://ie.wampi.ru/2023/10/09/imagedc462967381d48d9.png)
+![image-1.png](https://im.wampi.ru/2023/10/09/image-1.png)
+![image-2.png](https://ic.wampi.ru/2023/10/09/image-2.png)
 
 # **Разработчики:**
 [Михаил Московкин](https://github.com/Anstane) - Разработчик
