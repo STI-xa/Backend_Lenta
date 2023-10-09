@@ -46,6 +46,10 @@ docker-compose exec backend python manage.py dumpdata > fixtures.json
 ```
 
 ### **Образ доступен на** [DockerHub](https://hub.docker.com/u/anstane)
+
+![Alt text](image.png)
+![Alt text](image-1.png)
+![Alt text](image-2.png)
 ___
 ## **Примеры запросов**:
 POST-запрос для логина 
