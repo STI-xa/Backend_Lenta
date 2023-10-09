@@ -100,9 +100,9 @@ is_active*	Is active[...]
  
 }
 ```
-![Alt text](image.png)
-![Alt text](image-1.png)
-![Alt text](image-2.png)
+![Alt text](https://imgur.com/xbvXlCu)
+![Alt text](https://imgur.com/LaFxvmD)
+![Alt text](https://imgur.com/sagBzw2)
 ____
 
 # **Разработчики:**
