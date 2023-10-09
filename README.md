@@ -100,10 +100,7 @@ is_active*	Is active[...]
  
 }
 ```
-![Alt text](image.png)
-![Alt text](image-1.png)
-![Alt text](image-2.png)
-____
+
 # **Разработчики:**
 [Михаил Московкин](https://github.com/Anstane) - Разработчик
 
