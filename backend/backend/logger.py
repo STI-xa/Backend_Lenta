@@ -3,25 +3,31 @@ import logging
 from logging.handlers import RotatingFileHandler
 from sys import stdout
 
-from django.conf import settings
+from .settings import logging_settings
 
 
 def logger_factory(name: str) -> logging.Logger:
     """Генерирует преднастроенный логгер по заданному имени."""
+
     logger = logging.getLogger(name)
 
     logger.setLevel(
-        logging.DEBUG if settings.LOGGING['debug'] else logging.CRITICAL
+        logging.DEBUG if
+        logging_settings.debug else logging.CRITICAL
     )
 
     c_handler = logging.StreamHandler(stdout)
-    f_handler = RotatingFileHandler(filename=settings.LOGGING['log_file'],
-                                    maxBytes=10**6,
-                                    backupCount=5,
-                                    encoding='UTF-8')
+    f_handler = RotatingFileHandler(
+        filename=logging_settings.log_file,
+        maxBytes=10**6,
+        backupCount=5,
+        encoding='UTF-8'
+    )
 
-    formatter = logging.Formatter(fmt=settings.LOGGING['log_format'],
-                                  datefmt=settings.LOGGING['dt_format'])
+    formatter = logging.Formatter(
+        fmt=logging_settings.log_format,
+        datefmt=logging_settings.dt_format
+    )
     c_handler.setFormatter(formatter)
     f_handler.setFormatter(formatter)
 
@@ -36,7 +42,7 @@ def log_exceptions(logger: logging.Logger):
     def wrap_func(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            if settings.DEBUG:
+            if logging_settings.debug:
                 if kwargs.get('state'):
                     state = kwargs["state"]
                     state_data = state.get_data()
