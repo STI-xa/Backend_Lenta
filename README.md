@@ -1,4 +1,13 @@
-# **Hackathon_Lenta_Backend** 
+![image](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
+![image](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![image](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)
+![image](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white)
+![image](https://img.shields.io/badge/Djoser-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
+![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![image](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+
+# **Hackathon_lenta_backend**
 
 Backend часть для проекта хакатона Практикум х Лента. 
 Основной функционал всего проекта- создать интерфейс и алгоритм прогноза спроса на 14 дней для товаров собственного производства сети Лента.
@@ -46,6 +55,7 @@ docker-compose exec backend python manage.py dumpdata > fixtures.json
 ```
 
 ### **Образ доступен на** [DockerHub](https://hub.docker.com/u/anstane)
+
 ___
 ## **Примеры запросов**:
 POST-запрос для логина 
@@ -90,19 +100,12 @@ is_active*	Is active[...]
  
 }
 ```
-### **Образ доступен на** [DockerHub](https://hub.docker.com/u/anstane)
-____
+![imagedc462967381d48d9.png](https://ie.wampi.ru/2023/10/09/imagedc462967381d48d9.png)
+![image-1.png](https://im.wampi.ru/2023/10/09/image-1.png)
+![image-2.png](https://ic.wampi.ru/2023/10/09/image-2.png)
+
 # **Разработчики:**
 [Михаил Московкин](https://github.com/Anstane) - Разработчик
 
 [Полина Николаева](https://github.com/STI-xa) - Разработчик
-___
-## **Стэк технологий**:
-* ![image](https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=blue)
-* ![image](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
-* ![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
-* ![image](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)
-* ![image](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white)
-* ![image](https://img.shields.io/badge/Djoser-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
-* ![image](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-* ![image](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+
