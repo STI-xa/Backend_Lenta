@@ -8,7 +8,9 @@ from .models import CustomUser
 class UserAdmin(UserAdmin):
     list_display = (
         'username',
+        'email',
     )
     search_fields = (
         'username',
+        'email',
     )

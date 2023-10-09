@@ -8,6 +8,7 @@ from .settings import logging_settings
 
 def logger_factory(name: str) -> logging.Logger:
     """Генерирует преднастроенный логгер по заданному имени."""
+
     logger = logging.getLogger(name)
 
     logger.setLevel(

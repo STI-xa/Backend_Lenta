@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'djoser',
     'drf_yasg',
     'corsheaders',
-    'tests',
     'users',
     'sales',
     'api'
@@ -120,7 +119,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -164,6 +163,8 @@ logging_settings = LoggingSettings(
 
 logging_settings.init_global_logging_level()
 
+
+# Docs generator
 
 SWAGGER_SETTINGS = {
     'DEFAULT_GENERATOR_CLASS': 'drf_yasg.generators.OpenAPISchemaGenerator',
