@@ -100,9 +100,9 @@ is_active*	Is active[...]
  
 }
 ```
-[Imgur](https://imgur.com/LaFxvmD)
-[Imgur](https://imgur.com/xbvXlCu)
-[Imgur](https://imgur.com/sagBzw2)
+![Imgur](https://imgur.com/LaFxvmD)
+![Imgur](https://imgur.com/xbvXlCu)
+![Imgur](<blockquote class="imgur-embed-pub" lang="en" data-id="sagBzw2" data-context="false" ><a href="//imgur.com/sagBzw2"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>)
 ____
 
 # **Разработчики:**
