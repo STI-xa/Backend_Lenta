@@ -17,6 +17,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
+CORS_ALLOW_ALL_ORIGINS = True
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -29,7 +32,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'drf_yasg',
-    'tests',
+    'corsheaders',
     'users',
     'sales',
     'api'
@@ -43,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -69,11 +73,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', default='django'),
-        'USER': os.getenv('POSTGRES_USER', default='django'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default=''),
-        'HOST': os.getenv('DB_HOST', default=''),
-        'PORT': os.getenv('DB_PORT', default='5432')
+        'NAME': os.getenv('POSTGRES_DB', 'postgres_name'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres_user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
     }
 }
 
@@ -115,7 +119,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -159,6 +163,8 @@ logging_settings = LoggingSettings(
 
 logging_settings.init_global_logging_level()
 
+
+# Docs generator
 
 SWAGGER_SETTINGS = {
     'DEFAULT_GENERATOR_CLASS': 'drf_yasg.generators.OpenAPISchemaGenerator',
