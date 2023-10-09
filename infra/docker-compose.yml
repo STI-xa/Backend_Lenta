@@ -33,3 +33,9 @@ services:
       - lenta_static:/staticfiles/
     ports:
       - 8000:80
+
+  ds-script:
+    image: anstane/ml_lenta
+    depends_on:
+      - backend
+      - db
