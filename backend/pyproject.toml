@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = "Lenta Backend App"
+authors = [
+    "Mikhail Moskovkin <anstane228@gmail.com>",
+    "Polina Nikolaeva <sti-xa@yandex.ru>",
+]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+django = "4.2.5"
+djangorestframework = "3.14.0"
+djoser = "2.2.0"
+django-filter = "23.3"
+drf-yasg = "1.21.7"
+gunicorn = "21.2.0"
+python-dotenv = "1.0.0"
+pandas = "2.1.1"
+django-cors-headers = "4.2.0"
+psycopg2-binary = "2.9.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
