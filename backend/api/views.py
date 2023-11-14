@@ -51,9 +51,14 @@ class SalesViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = Sales.objects.filter(
                 st_id=store, pr_sku_id=sku
             )
-            return queryset
+        elif store:
+            queryset = Sales.objects.filter(
+                st_id=store
+            )
+        else:
+            queryset = Sales.objects.none()
 
-        return Sales.objects.none()
+        return queryset
 
 
 class ForecastViewSet(CreateRetrieveMixin, viewsets.GenericViewSet):

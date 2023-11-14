@@ -69,7 +69,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -81,6 +80,12 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+#     }
+# }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -108,10 +113,10 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+STATIC_ROOT = BASE_DIR / 'collected_static'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -119,7 +124,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -152,7 +157,8 @@ DJOSER = {
     },
 }
 
-# LOG_DIR: pathlib.Path = BASE_DIR / 'logs'
+
+# Logger
 
 logging_settings = LoggingSettings(
     log_file=Path('./logs'),
